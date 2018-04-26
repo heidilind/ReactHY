@@ -1,15 +1,14 @@
 import React from 'react'
 import axios from 'axios'
 
-const CountryInfo = ({countries}) => {
+const CountryInfo = (props) => {
   return (
     <table>
       <tbody>
-          {
-            countries.map(c =>
-            <tr key={c.name}>
-              <td>{c.name}</td>
-            </tr>
+        {props.countries.map(c =>
+          <tr key={c.name}>
+            <td onClick={ props.updateFunction(c)}>{c.name}</td>
+          </tr>
         )}
       </tbody>
     </table>
@@ -52,6 +51,11 @@ class App extends React.Component {
 
   parseFilterWord = (word) => word.toUpperCase().includes(this.state.filter.toUpperCase().trim())
 
+  showOneCountry = (country) => () => {
+    console.log('updateFunction', country)
+    this.setState({ countries: [country]})
+  }
+
   render() {
     const countriesToShow =
       this.state.filter === '' ?
@@ -70,7 +74,7 @@ class App extends React.Component {
         )
       } else {
         return (
-            <CountryInfo countries={countriesToShow} />
+            <CountryInfo countries={countriesToShow} updateFunction={this.showOneCountry}/>
         )
       }
     }
